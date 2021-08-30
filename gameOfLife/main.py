@@ -5,9 +5,6 @@ Game of Life!
 from testGame import TestGame
 from board import Board
 
-# testTable = TestGame()
-# testTable.printGame()
-
 def main():
 
     # Create the initial board

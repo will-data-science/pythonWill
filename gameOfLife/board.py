@@ -25,7 +25,6 @@ class Board:
     # Update board with next generation
     def boardUpdate(self):
         print('updating game board')
-        self.boardDraw()
 
         # Store cells that will either go to live or to dead
         toLive = []
@@ -44,11 +43,7 @@ class Board:
 
                 for neighbor in validNeighbors:
                     # Check if alive
-                    #print(neighbor.getCellStatus())
-                    #testStatus = neighbor.isAlive()
-                    #print(testStatus)
                     if neighbor.isAlive():
-                        #print("testing!!!")
                         liveNeighborCount += 1
 
                 if currentStatus == True:
@@ -77,7 +72,7 @@ class Board:
         Draws the board in the terminal
         TODO: Update with graphics to replace terminal
         '''
-        numRows = 10 # Controls boarder/line break in terminal
+        numRows = 4 # Controls boarder/line break in terminal
         print('\n' * numRows)
         print('printing board')
         for row in self.grid:
@@ -102,7 +97,6 @@ class Board:
 
         neighbors = []
 
-        #print("********************")
         # check cells in rows/columns both before & after
         for row in range(searchMin, searchMax):
             for column in range(searchMin, searchMax):
@@ -127,9 +121,5 @@ class Board:
 
                 if valid:
                     neighbors.append(self.grid[rowNeighbor][colNeighbor])
-
-                #print(f"Column {cellColumn}, Row {cellRow} has neighbor at Column {colNeighbor}, Row {rowNeighbor} and it is valid: {valid}")
-
-            #print(f"Column {cellColumn}, Row {cellRow} has {len(neighbors)} neighbors")
 
         return neighbors
