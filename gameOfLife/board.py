@@ -1,5 +1,6 @@
 from cell import Cell
 from random import randint
+import itertools
 
 class Board:
 
@@ -9,7 +10,7 @@ class Board:
         '''
         self.rows = rows
         self.columns = columns
-        self.grid = [[Cell() for columnCells in range(self.columns)] for rowCells in range(self.rows)]
+        self.grid = [[Cell(rowCells, columnCells) for columnCells in range(self.columns)] for rowCells in range(self.rows)]
 
         self.boardGenerate()
 
@@ -18,7 +19,7 @@ class Board:
         for row in self.grid:
             for column in row:
                 # Randomly generate live cells
-                maxInt = 2 # Higher number -> less likely to be live
+                maxInt = 3 # Higher number -> less likely to be live
                 if (randint(0, maxInt)) == 1:
                     column.statusUpdateLive()
 
@@ -30,37 +31,28 @@ class Board:
         toLive = []
         toDead = []
 
-        # Cycle through each cell
-        for row in range(len(self.grid)):
-            for column in range(len(self.grid[row])):
+        # Get number of live neighbors for each cell
+        neighborsArray = [
+            [
+                self.getLiveNeighbors(self.getValidNeighbors(cell.row, cell.col)) for cell in row
+            ] for row in self.grid]
 
-                currentCell = self.grid[row][column]
-                currentStatus = currentCell.isAlive()
+        # Determine which live cells die
+        toDead = list(itertools.chain(*[
+            [
+                cell for cell in row if (cell.status == 1 and not 2 <= neighborsArray[cell.row][cell.col] <= 3)
+            ] for row in self.grid]))
 
-                # Get the valid neighbors for each cell
-                validNeighbors = self.getValidNeighbors(row, column)
-                liveNeighborCount = 0
-
-                for neighbor in validNeighbors:
-                    # Check if alive
-                    if neighbor.isAlive():
-                        liveNeighborCount += 1
-
-                if currentStatus == True:
-                    # A live cell will die if there are less than 2 neighbors
-                    # A live cell will live if there are exactly 2 or 3 neighbors
-                    # A live cell will die if there are more than 3 neighbors
-                    if liveNeighborCount < 2 or liveNeighborCount > 3:
-                        toDead.append(currentCell)
-                    else:
-                        toLive.append(currentCell)
-
-                else:
-                    # A dead cell will change to live if there are exactly 3 neighbors
-                    if liveNeighborCount == 3:
-                        toLive.append(currentCell)
+        # Determine which dead cells live
+        toLive = list(itertools.chain(*[
+            [
+                cell for cell in row if (cell.status == 0 and neighborsArray[cell.row][cell.col] == 3)
+            ] for row in self.grid]))
 
         # Update the cells
+        '''
+        TODO: Determine if can remove for loop
+        '''
         for cell in toLive:
             cell.statusUpdateLive()
         for cell in toDead:
@@ -80,16 +72,11 @@ class Board:
                 print(column.getCellStatus(), end = '') # use end to keep on same line
             print() # essentially creates a new line in terminal
 
-    # Given a cell (row/column), find all neighbors
-    def findNeighbors(self, row, column):
-        '''
-        For each cell, get the neighbors
-        '''
-
     def getValidNeighbors(self, cellRow, cellColumn):
         '''
         Check if neighbors are valid (not outside board)
         Returns valid neighbors
+        TODO: Clean up possibly remove for loops
         '''
 
         searchMin = -1 # minimum is 1 row/column before
@@ -124,3 +111,6 @@ class Board:
                     neighbors.append(self.grid[rowNeighbor][colNeighbor])
 
         return neighbors
+
+    def getLiveNeighbors(self, allNeighbors) :
+        return sum([x.status for x in allNeighbors])

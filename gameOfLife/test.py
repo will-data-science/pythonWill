@@ -1,4 +1,3 @@
-from testGame import TestGame
 from board import Board
 from copy import deepcopy
 
@@ -14,22 +13,22 @@ def main():
 
     # Test 1
     #
-    # ***        ***
-    # ***   ->   ***
-    # ***        ***
+    # 000        000
+    # 000   ->   000
+    # 000        000
     #
     testBoard1 = deepcopy(allDead)
     testBoard1.boardUpdate()
     # assert testBoard1.grid == allDead.grid
     for row in range(len(testBoard1.grid)):
         for col in range(len(testBoard1.grid[row])):
-            assert testBoard1.grid[row][col].getCellStatus() == "*"
+            assert testBoard1.grid[row][col].getCellStatus() == "0"
 
     # Test 2
     #
-    # 000       0*0
-    # 000   ->  ***
-    # 000       0*0
+    # 111       101
+    # 111   ->  000
+    # 111       101
     #
     testBoard2 = deepcopy(allLive)
     testBoard2.boardUpdate()
@@ -46,9 +45,9 @@ def main():
 
     # Test 3
     #
-    # *0*       *0*
-    # 0*0   ->  0*0
-    # *0*       *0*
+    # 010       010
+    # 101   ->  101
+    # 010       010
     #
     testBoard3 = deepcopy(allDead)
     testBoard3.grid[0][1].statusUpdateLive()
@@ -65,9 +64,9 @@ def main():
 
     # Test 4
     #
-    # 0*0       *0*
-    # *0*   ->  0*0
-    # 0*0       *0*
+    # 101       010
+    # 010   ->  101
+    # 101       010
     testBoard4 = deepcopy(allDead)
     testBoard4.grid[0][0].statusUpdateLive()
     testBoard4.grid[0][2].statusUpdateLive()
@@ -86,5 +85,36 @@ def main():
     for row in range(len(testBoard4.grid)):
         for col in range(len(testBoard4.grid[row])):
             assert testBoard4.grid[row][col].getCellStatus() == correctUpdatedBoard4.grid[row][col].getCellStatus()
+
+    # Test 5
+    #
+    # 000        000
+    # 000   ->   000
+    # 000        000
+    # 000        000
+
+    testBoard5 = Board(4, 3)
+    [[x.statusUpdateDead() for x in row] for row in testBoard5.grid]
+    correctUpdatedBoard5 = deepcopy(testBoard5)
+    testBoard5.boardUpdate()
+
+    for row in range(len(testBoard5.grid)):
+        for col in range(len(testBoard5.grid[row])):
+            assert testBoard5.grid[row][col].getCellStatus() == correctUpdatedBoard5.grid[row][col].getCellStatus()
+
+    # Test 6
+    #
+    # 0000        0000
+    # 0000   ->   0000
+    # 0000        0000
+
+    testBoard6 = Board(3, 4)
+    [[x.statusUpdateDead() for x in row] for row in testBoard6.grid]
+    correctUpdatedBoard6 = deepcopy(testBoard6)
+    testBoard6.boardUpdate()
+
+    for row in range(len(testBoard6.grid)):
+        for col in range(len(testBoard5.grid[row])):
+            assert testBoard6.grid[row][col].getCellStatus() == correctUpdatedBoard6.grid[row][col].getCellStatus()
 
 main()
