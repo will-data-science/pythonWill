@@ -63,4 +63,28 @@ def main():
         for col in range(len(testBoard3.grid[row])):
             assert testBoard3.grid[row][col].getCellStatus() == correctUpdatedBoard3.grid[row][col].getCellStatus()
 
+    # Test 4
+    #
+    # 0*0       *0*
+    # *0*   ->  0*0
+    # 0*0       *0*
+    testBoard4 = deepcopy(allDead)
+    testBoard4.grid[0][0].statusUpdateLive()
+    testBoard4.grid[0][2].statusUpdateLive()
+    testBoard4.grid[1][1].statusUpdateLive()
+    testBoard4.grid[2][0].statusUpdateLive()
+    testBoard4.grid[2][2].statusUpdateLive()
+
+    correctUpdatedBoard4 = deepcopy(allDead)
+    correctUpdatedBoard4.grid[0][1].statusUpdateLive()
+    correctUpdatedBoard4.grid[1][0].statusUpdateLive()
+    correctUpdatedBoard4.grid[1][2].statusUpdateLive()
+    correctUpdatedBoard4.grid[2][1].statusUpdateLive()
+
+    testBoard4.boardUpdate()
+
+    for row in range(len(testBoard4.grid)):
+        for col in range(len(testBoard4.grid[row])):
+            assert testBoard4.grid[row][col].getCellStatus() == correctUpdatedBoard4.grid[row][col].getCellStatus()
+
 main()

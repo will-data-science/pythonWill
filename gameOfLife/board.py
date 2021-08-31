@@ -97,6 +97,7 @@ class Board:
 
         neighbors = []
 
+
         # check cells in rows/columns both before & after
         for row in range(searchMin, searchMax):
             for column in range(searchMin, searchMax):
