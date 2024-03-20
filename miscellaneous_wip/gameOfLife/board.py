@@ -2,15 +2,17 @@ from cell import Cell
 from random import randint
 import itertools
 
+
 class Board:
 
     def __init__(self, rows, columns):
-        '''
+        """
         Set initial board based on columns & rows
-        '''
+        """
         self.rows = rows
         self.columns = columns
-        self.grid = [[Cell(rowCells, columnCells) for columnCells in range(self.columns)] for rowCells in range(self.rows)]
+        self.grid = [[Cell(rowCells, columnCells) for columnCells in range(self.columns)] for rowCells in
+                     range(self.rows)]
 
         self.boardGenerate()
 
@@ -19,7 +21,7 @@ class Board:
         for row in self.grid:
             for column in row:
                 # Randomly generate live cells
-                maxInt = 3 # Higher number -> less likely to be live
+                maxInt = 3  # Higher number -> less likely to be live
                 if (randint(0, maxInt)) == 1:
                     column.statusUpdateLive()
 
@@ -60,30 +62,29 @@ class Board:
 
     # Draw board
     def boardDraw(self):
-        '''
+        """
         Draws the board in the terminal
         TODO: Update with graphics to replace terminal
-        '''
-        numRows = 4 # Controls boarder/line break in terminal
+        """
+        numRows = 4  # Controls boarder/line break in terminal
         print('\n' * numRows)
         print('printing board')
         for row in self.grid:
             for column in row:
-                print(column.getCellStatus(), end = '') # use end to keep on same line
-            print() # essentially creates a new line in terminal
+                print(column.getCellStatus(), end='')  # use end to keep on same line
+            print()  # essentially creates a new line in terminal
 
     def getValidNeighbors(self, cellRow, cellColumn):
-        '''
+        """
         Check if neighbors are valid (not outside board)
         Returns valid neighbors
         TODO: Clean up possibly remove for loops
-        '''
+        """
 
-        searchMin = -1 # minimum is 1 row/column before
-        searchMax = 2 # maximum is 1 row/column after -> range will go to 2 - 1 = 1
+        searchMin = -1  # minimum is 1 row/column before
+        searchMax = 2  # maximum is 1 row/column after -> range will go to 2 - 1 = 1
 
         neighbors = []
-
 
         # check cells in rows/columns both before & after
         for row in range(searchMin, searchMax):
@@ -112,5 +113,5 @@ class Board:
 
         return neighbors
 
-    def getLiveNeighbors(self, allNeighbors) :
+    def getLiveNeighbors(self, allNeighbors):
         return sum([x.status for x in allNeighbors])
