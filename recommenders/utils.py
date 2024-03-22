@@ -63,6 +63,36 @@ def process_item_df(item_df, item_id_col) -> pd.DataFrame:
     return ret_df
 
 
+def get_agg_feature_df(source_df: pd.DataFrame, ui_id_col: str, agg_feature_col: str) -> pd.DataFrame:
+    """
+    Returns dataframe of features aggregated to basic statisticsL mean, median, min, max, std
+
+    :param source_df: Pandas DataFrame of non-aggregated data
+    :param ui_id_col: String column name for a user (u), item (i), or other identifier that you want to aggregate to
+                      that level
+    :param agg_feature_col: String column name for the column you want to buidl features for
+    """
+
+    ret_df = source_df.groupby(ui_id_col).agg(
+        agg_feature_mean=(agg_feature_col, 'mean'),
+        agg_feature_median=(agg_feature_col, 'median'),
+        agg_feature_std=(agg_feature_col, 'std'),
+        agg_feature_min=(agg_feature_col, 'min'),
+        agg_feature_max=(agg_feature_col, 'max')
+    )
+
+    col_rename_mapping = {
+        'agg_feature_mean': agg_feature_col + '_mean',
+        'agg_feature_median': agg_feature_col + '_median',
+        'agg_feature_std': agg_feature_col + '_std',
+        'agg_feature_min': agg_feature_col + '_min',
+        'agg_feature_max': agg_feature_col + '_max',
+    }
+
+    ret_df = ret_df.rename(columns=col_rename_mapping)
+
+    return ret_df
+
 def get_users(interaction_df: pd.DataFrame, user_id_col: str) -> pd.DataFrame:
     ret_df = interaction_df[[user_id_col]].drop_duplicates()
     return ret_df
