@@ -61,3 +61,17 @@ def process_item_df(item_df, item_id_col) -> pd.DataFrame:
         how='left'
     )
     return ret_df
+
+
+def get_users(interaction_df: pd.DataFrame, user_id_col: str) -> pd.DataFrame:
+    ret_df = interaction_df[[user_id_col]].drop_duplicates()
+    return ret_df
+
+
+def get_items(interaction_df: pd.DataFrame, item_id_col: str) -> pd.DataFrame:
+    ret_df = interaction_df[[item_id_col]].drop_duplicates()
+    return ret_df
+
+
+def process_user_df(interaction_df: pd.DataFrame, user_id_col: str) -> pd.DataFrame:
+    pass
