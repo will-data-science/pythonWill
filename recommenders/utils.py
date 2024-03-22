@@ -39,7 +39,7 @@ def get_genre_df(item_df, item_id_col) -> pd.DataFrame:
     temp_df[temp_genre] = temp_df['value'].map(lambda x: x.strip()).map(lambda x: x.lower())
     temp_df[temp_genre] = temp_df[temp_genre].str.replace('[^a-zA-Z0-9 ]', '', regex=True)
     temp_df[temp_genre] = temp_df[temp_genre].str.replace(' ', '_', regex=False)
-    temp_df[temp_genre] = 1
+    temp_df['is_genre'] = 1
     ret_df = temp_df.pivot(index=item_id_col, columns=temp_genre, values='is_genre').fillna(0)
 
     return ret_df
@@ -55,8 +55,6 @@ def process_item_df(item_df, item_id_col) -> pd.DataFrame:
 
     clean_df = clean_item_data(item_df=item_df)
     genre_df = get_genre_df(item_df=clean_df, item_id_col=item_id_col)
-    # TODO: Prob less efficient to merge against the interaction df but good for now
-    # TODO: In future construct an item df with only the item information
     ret_df = clean_df.merge(
         genre_df,
         on=item_id_col,
