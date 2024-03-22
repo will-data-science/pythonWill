@@ -1,2 +1,4 @@
 .idea/
 /recommenders/.ipynb_checkpoints/
+/recommenders/local_files.py
+/recommenders/__pycache__
