@@ -93,6 +93,32 @@ def get_agg_feature_df(source_df: pd.DataFrame, ui_id_col: str, agg_feature_col:
 
     return ret_df
 
+
+def get_ratings_targets_df(
+        ratings_interaction_df: pd.DataFrame,
+        user_ratings_df: pd.DataFrame,
+        user_id_col: str,
+        item_id_col: str
+) -> pd.DataFrame:
+    """
+    Generate a dataframe of targets based on ratings.
+    """
+    # GroupBy incase user placed multiple ratings on an item
+    ret_df = ratings_interaction_df.groupby([user_id_col, item_id_col]).agg(
+        user_item_rating_mean=('rating', 'mean')
+    ).merge(
+        user_ratings_df, on=[user_id_col], how='left'
+    )
+
+    ret_df['has_interacted'] = True
+    ret_df['rating_atleast_3'] = ret_df['user_item_rating_mean'] > 2
+    ret_df['rating_atleast_4'] = ret_df['user_item_rating_mean'] > 3
+    ret_df['rating_atleast_5'] = ret_df['user_item_rating_mean'] > 4
+    ret_df['rating_atleast_user_mean'] = ret_df['user_item_rating_mean'] >= ret_df['rating_mean']
+    ret_df['rating_atleast_user_median'] = ret_df['user_item_rating_mean'] >= ret_df['rating_median']
+
+    return ret_df
+
 def get_users(interaction_df: pd.DataFrame, user_id_col: str) -> pd.DataFrame:
     ret_df = interaction_df[[user_id_col]].drop_duplicates()
     return ret_df
