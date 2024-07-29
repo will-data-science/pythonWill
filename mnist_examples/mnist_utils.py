@@ -90,6 +90,15 @@ def analyze_random_forest_model(target_n: int, y_array, x_data):
     int_labels = get_int_labels(target_n=target_n, y_array=y_array)
 
     forest_model = RandomForestClassifier(random_state=13)
+
+    temp_preds = cross_val_predict(
+        forest_model, x_data, int_labels, cv=5
+    )
+
+    model_results = _get_class_perf_metrics(
+        y_array=int_labels, preds_array=temp_preds
+    )
+
     temp_probs = cross_val_predict(forest_model, x_data, int_labels, cv=5, method='predict_proba')
 
     temp_scores = temp_probs[:, 1]  # pull out column 1 to get positive class probability
@@ -105,3 +114,9 @@ def analyze_random_forest_model(target_n: int, y_array, x_data):
     false_positive_rates, true_positive_rates, thresholds = roc_curve(int_labels, temp_scores)
 
     plot_roc(false_positives_array=false_positive_rates, true_positives_array=true_positive_rates)
+
+    return model_results
+
+
+def one_vs_rest_multiclass():
+    pass
